@@ -7,17 +7,18 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "./components/ImageModal/ImageModal";
 import toast, { Toaster } from "react-hot-toast";
+import { Image } from "./types/Image";
 
 const API_KEY = "KIlvdgY8-2uNmXDH759UCWzb4EL_A9v9xoNnDNdCayQ";
 const API_URL = "https://api.unsplash.com/search/photos";
 
 const App = () => {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [error, setError] = useState(null);
+  const [images, setImages] = useState<Image[]>([]);
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!query) return;
@@ -41,10 +42,22 @@ const App = () => {
   return (
     <>
       <Toaster />
-      <SearchBar onSubmit={setQuery} />
-      <ImageGallery images={images} onImageClick={setSelectedImage} />
+      <SearchBar
+        onSubmit={(query: string) => {
+          setQuery(query);
+          setImages([]);
+          setPage(1);
+        }}
+      />
+      <ImageGallery
+        images={images}
+        onImageClick={(image) => setSelectedImage(image)}
+      />
       {loading && <Loader />}
-      {images.length > 0 && <LoadMoreBtn onClick={() => setPage(page + 1)} />}
+      {error && <ErrorMessage message={error} />}
+      {images.length > 0 && !loading && (
+        <LoadMoreBtn onClick={() => setPage((prev) => prev + 1)} />
+      )}
       {selectedImage && (
         <ImageModal
           isOpen={true}

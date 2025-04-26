@@ -1,6 +1,14 @@
 import css from "./ImageCard.module.css";
 
-const ImageCard = ({ image, onImageClick }) => {
+interface Props {
+  image: {
+    alt_description: string;
+    urls: { small: string };
+  };
+  onImageClick: (image: any) => void;
+}
+
+const ImageCard = ({ image, onImageClick }: Props) => {
   return (
     <div className={css.card} onClick={() => onImageClick(image)}>
       <img

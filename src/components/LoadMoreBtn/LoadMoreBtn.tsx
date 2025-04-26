@@ -1,6 +1,10 @@
 import css from "./LoadMoreBtn.module.css";
 
-const LoadMoreBtn = ({ onClick }) => {
+interface Props {
+  onClick: () => void;
+}
+
+const LoadMoreBtn = ({ onClick }: Props) => {
   return (
     <div className={css.container}>
       <button className={css.button} onClick={onClick}>
